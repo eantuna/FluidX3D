@@ -192,7 +192,7 @@ void main_setup() { // benchmark; required extensions in defines.hpp: BENCHMARK,
 
 
 
-void main_setup() { // cylinder in rectangular duct; required extensions in defines.hpp: VOLUME_FORCE, INTERACTIVE_GRAPHICS
+/*void main_setup() { // cylinder in rectangular duct; required extensions in defines.hpp: VOLUME_FORCE, INTERACTIVE_GRAPHICS
 	// ################################################################## define simulation box size, viscosity and volume force ###################################################################
 	const float Re = 25000.0f;
 	const float D = 64.0f;
@@ -212,8 +212,7 @@ void main_setup() { // cylinder in rectangular duct; required extensions in defi
 		lbm.graphics.write_frame_png(get_exe_path() + "export/a/");
 		lbm.run(12u);
 	}
-
-} 
+} /**/
 
 
 
