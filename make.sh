@@ -10,3 +10,5 @@ g++ ./src/*.cpp -o ./bin/FluidX3D -std=c++17 -pthread -I./src/OpenCL/include -L.
 #g++ ./src/*.cpp -o ./bin/FluidX3D -std=c++17 -pthread -I./src/OpenCL/include -L/system/vendor/lib64 -lOpenCL # compile on Android (without X11)
 
 ./bin/FluidX3D "$@" # run FluidX3D
+
+#g++ ./src/*.cpp -o ./bin/FluidX3D-X-Wing -std=c++17 -pthread -I./src/OpenCL/include -framework OpenCL
