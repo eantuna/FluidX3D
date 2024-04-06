@@ -32,3 +32,5 @@ ffmpeg -i FluidX3D_F1_670_7E6_wAudio.mp4 -r 40 FluidX3D_F1_670_7E6_Twitter.mp4
 ffmpeg -i FluidX3D_F1_670_7E6_Twitter2.mp4 -vcodec libx264 -crf 28 FluidX3D_F1_670_7E6_Twitter28.mp4
 
 ffmpeg -pattern_type glob -i "*/image-*.png" -pix_fmt yuv420p FluidX3D_X_Wing.mp4
+ffmpeg -i FluidX3D_X_Wing_15100MB_NU7E4.mp4 -i The\ Force\ \(Piano\ \&\ Strings\)\ \[Mastered\].mp3 -shortest -c:v copy -map 0:v:0 -map 1:a:0 -c:a aac -b:a 192k FluidX3D_X_Wing_15100MB_NU7E4_WA.mp4
+ffmpeg -i FluidX3D_X_Wing_15100MB_NU7E4_WA.mp4 -r 30 FluidX3D_X_Wing_15100MB_NU7E4_30FPS.mp4
