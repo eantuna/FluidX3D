@@ -499,23 +499,27 @@ void main_setup() { // benchmark; required extensions in defines.hpp: BENCHMARK,
 
 
 
-/*void main_setup() { // radial fan; required extensions in defines.hpp: FP16S, MOVING_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
+void main_setup() { // radial fan; required extensions in defines.hpp: FP16S, MOVING_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
 	// ################################################################## define simulation box size, viscosity and volume force ###################################################################
 	const uint3 lbm_N = resolution(float3(3.0f, 3.0f, 1.0f), 181u); // input: simulation box aspect ratio and VRAM occupation in MB, output: grid resolution
 	const float lbm_Re = 100000.0f;
 	const float lbm_u = 0.12f;
-	const uint lbm_T = 48000u;
+	const uint lbm_T = 3000u;
 	const uint lbm_dt = 10u;
-	LBM lbm(lbm_N, units.nu_from_Re(lbm_Re, (float)lbm_N.x, lbm_u));
+	const float nu = units.nu_from_Re(lbm_Re, (float)lbm_N.x, lbm_u);
+	print_info("Recommended nu = " + to_string(nu));
+	LBM lbm(lbm_N, nu);
 	// ###################################################################################### define geometry ######################################################################################
 	const float radius = 0.25f*(float)lbm_N.x;
 	const float3 center = float3(lbm.center().x, lbm.center().y, 0.36f*radius);
 	const float lbm_omega=lbm_u/radius, lbm_domega=lbm_omega*lbm_dt;
 	Mesh* mesh = read_stl(get_exe_path()+"../stl/FAN_Solid_Bottom.stl", lbm.size(), center, 2.0f*radius); // https://www.thingiverse.com/thing:6113/files
-	const uint Nx=lbm.get_Nx(), Ny=lbm.get_Ny(), Nz=lbm.get_Nz(); parallel_for(lbm.get_N(), [&](ulong n) { uint x=0u, y=0u, z=0u; lbm.coordinates(n, x, y, z);
+	const uint Nx=lbm.get_Nx(), Ny=lbm.get_Ny(), Nz=lbm.get_Nz(); 
+	parallel_for(lbm.get_N(), [&](ulong n) { 
+		uint x=0u, y=0u, z=0u; lbm.coordinates(n, x, y, z);
 		if(x==0u||x==Nx-1u||y==0u||y==Ny-1u||z==0u) lbm.flags[n] = TYPE_S; // all non periodic
 	}); // ####################################################################### run simulation, export images and data ##########################################################################
-	lbm.graphics.visualization_modes = VIS_FLAG_LATTICE|VIS_FLAG_SURFACE|VIS_Q_CRITERION;
+	lbm.graphics.visualization_modes = VIS_FLAG_SURFACE|VIS_Q_CRITERION;
 	lbm.run(0u); // initialize simulation
 	while(lbm.get_t()<lbm_T) { // main simulation loop
 		lbm.voxelize_mesh_on_device(mesh, TYPE_S, center, float3(0.0f), float3(0.0f, 0.0f, lbm_omega));
@@ -524,7 +528,7 @@ void main_setup() { // benchmark; required extensions in defines.hpp: BENCHMARK,
 #if defined(GRAPHICS) && !defined(INTERACTIVE_GRAPHICS)
 		if(lbm.graphics.next_frame(lbm_T, 30.0f)) {
 			lbm.graphics.set_camera_free(float3(0.353512f*(float)Nx, -0.150326f*(float)Ny, 1.643939f*(float)Nz), -25.0f, 61.0f, 100.0f);
-			lbm.graphics.write_frame();
+			lbm.graphics.write_frame(get_exe_path() + "export/s/");
 		}
 #endif // GRAPHICS && !INTERACTIVE_GRAPHICS
 	}
@@ -1447,7 +1451,7 @@ void main_setup() { // benchmark; required extensions in defines.hpp: BENCHMARK,
 	//lbm.write_status();
 } /**/
 
-void main_setup() { // Star Wars TIE fighter; required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
+/*void main_setup() { // Star Wars TIE fighter; required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
 	// ################################################################## define simulation box size, viscosity and volume force ###################################################################
 	const uint3 lbm_N = resolution(float3(1.0f, 2.0f, 1.0f), 1760u); // input: simulation box aspect ratio and VRAM occupation in MB, output: grid resolution
 	const float lbm_Re = 100000.0f;
