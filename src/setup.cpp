@@ -499,12 +499,12 @@ void main_setup() { // benchmark; required extensions in defines.hpp: BENCHMARK,
 
 
 
-void main_setup() { // radial fan; required extensions in defines.hpp: FP16S, MOVING_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
+/*void main_setup() { // radial fan; required extensions in defines.hpp: FP16S, MOVING_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
 	// ################################################################## define simulation box size, viscosity and volume force ###################################################################
 	const uint3 lbm_N = resolution(float3(3.0f, 3.0f, 1.0f), 181u); // input: simulation box aspect ratio and VRAM occupation in MB, output: grid resolution
 	const float lbm_Re = 100000.0f;
 	const float lbm_u = 0.12f;
-	const uint lbm_T = 3000u;
+	const uint lbm_T = 3000u; // default: 48000u
 	const uint lbm_dt = 10u;
 	const float nu = units.nu_from_Re(lbm_Re, (float)lbm_N.x, lbm_u);
 	print_info("Recommended nu = " + to_string(nu));
@@ -536,14 +536,16 @@ void main_setup() { // radial fan; required extensions in defines.hpp: FP16S, MO
 
 
 
-/*void main_setup() { // electric ducted fan (EDF); required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, MOVING_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
+void main_setup() { // electric ducted fan (EDF); required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, MOVING_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
 	// ################################################################## define simulation box size, viscosity and volume force ###################################################################
-	const uint3 lbm_N = resolution(float3(1.0f, 1.5f, 1.0f), 8000u); // input: simulation box aspect ratio and VRAM occupation in MB, output: grid resolution
+	const uint3 lbm_N = resolution(float3(1.0f, 1.5f, 1.0f), 800u); // input: simulation box aspect ratio and VRAM occupation in MB, output: grid resolution
 	const float lbm_Re = 1000000.0f;
 	const float lbm_u = 0.1f;
-	const uint lbm_T = 180000u;
+	const uint lbm_T = 1800u; // default: 180000
 	const uint lbm_dt = 4u;
-	LBM lbm(lbm_N, units.nu_from_Re(lbm_Re, (float)lbm_N.x, lbm_u));
+	const float nu = units.nu_from_Re(lbm_Re, (float)lbm_N.x, lbm_u);
+	print_info("Recommended nu = " + to_string(nu));
+	LBM lbm(lbm_N, nu);
 	// ###################################################################################### define geometry ######################################################################################
 	const float3 center = lbm.center();
 	const float3x3 rotation = float3x3(float3(0, 0, 1), radians(180.0f));
@@ -558,11 +560,13 @@ void main_setup() { // radial fan; required extensions in defines.hpp: FP16S, MO
 	rotor->set_center(rotor->get_bounding_box_center());
 	const float lbm_radius=0.5f*rotor->get_max_size(), omega=lbm_u/lbm_radius, domega=omega*(float)lbm_dt;
 	lbm.voxelize_mesh_on_device(stator, TYPE_S, center);
-	const uint Nx=lbm.get_Nx(), Ny=lbm.get_Ny(), Nz=lbm.get_Nz(); parallel_for(lbm.get_N(), [&](ulong n) { uint x=0u, y=0u, z=0u; lbm.coordinates(n, x, y, z);
+	const uint Nx=lbm.get_Nx(), Ny=lbm.get_Ny(), Nz=lbm.get_Nz(); 
+	parallel_for(lbm.get_N(), [&](ulong n) { 
+		uint x=0u, y=0u, z=0u; lbm.coordinates(n, x, y, z);
 		if(lbm.flags[n]==0u) lbm.u.y[n] = 0.3f*lbm_u;
 		if(x==0u||x==Nx-1u||y==0u||y==Ny-1u||z==0u||z==Nz-1u) lbm.flags[n] = TYPE_E; // all non periodic
 	}); // ####################################################################### run simulation, export images and data ##########################################################################
-	lbm.graphics.visualization_modes = VIS_FLAG_LATTICE|VIS_FLAG_SURFACE|VIS_Q_CRITERION;
+	lbm.graphics.visualization_modes = VIS_FLAG_SURFACE|VIS_Q_CRITERION;
 	lbm.run(0u); // initialize simulation
 	while(lbm.get_t()<lbm_T) { // main simulation loop
 		lbm.voxelize_mesh_on_device(rotor, TYPE_S, center, float3(0.0f), float3(0.0f, omega, 0.0f));
@@ -571,7 +575,7 @@ void main_setup() { // radial fan; required extensions in defines.hpp: FP16S, MO
 #if defined(GRAPHICS) && !defined(INTERACTIVE_GRAPHICS)
 		if(lbm.graphics.next_frame(lbm_T, 30.0f)) {
 			lbm.graphics.set_camera_centered(-70.0f+100.0f*(float)lbm.get_t()/(float)lbm_T, 2.0f, 60.0f, 1.284025f);
-			lbm.graphics.write_frame();
+			lbm.graphics.write_frame(get_exe_path() + "export/s/");
 		}
 #endif // GRAPHICS && !INTERACTIVE_GRAPHICS
 	}

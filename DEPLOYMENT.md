@@ -32,6 +32,7 @@ g++ ./src/*.cpp -o ./bin/FluidX3D_X_Wing -std=c++17 -pthread -I./src/OpenCL/incl
 g++ ./src/*.cpp -o ./bin/FluidX3D_Concord -std=c++17 -pthread -I./src/OpenCL/include -L./src/OpenCL/lib -lOpenCL
 g++ ./src/*.cpp -o ./bin/FluidX3D_TIE -std=c++17 -pthread -I./src/OpenCL/include -L./src/OpenCL/lib -lOpenCL
 g++ ./src/*.cpp -o ./bin/FluidX3D_R_Fan -std=c++17 -pthread -I./src/OpenCL/include -L./src/OpenCL/lib -lOpenCL
+g++ ./src/*.cpp -o ./bin/FluidX3D_EDF -std=c++17 -pthread -I./src/OpenCL/include -L./src/OpenCL/lib -lOpenCL
 
 ./bin/FluidX3D 
 
