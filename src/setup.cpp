@@ -813,7 +813,7 @@ void main_setup() { // benchmark; required extensions in defines.hpp: BENCHMARK,
 
 
 
-void main_setup() { // Bell 222 helicopter; required extensions in defines.hpp: FP16C, EQUILIBRIUM_BOUNDARIES, MOVING_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
+/*void main_setup() { // Bell 222 helicopter; required extensions in defines.hpp: FP16C, EQUILIBRIUM_BOUNDARIES, MOVING_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
 	// ################################################################## define simulation box size, viscosity and volume force ###################################################################
 	const uint3 lbm_N = resolution(float3(1.0f, 1.2f, 0.3f), 2000u); // input: simulation box aspect ratio and VRAM occupation in MB, output: grid resolution
 	const float lbm_u = 0.16f;
@@ -881,12 +881,12 @@ void main_setup() { // Bell 222 helicopter; required extensions in defines.hpp: 
 
 
 
-/*void main_setup() { // Mercedes F1 W14 car; required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, MOVING_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
+void main_setup() { // Mercedes F1 W14 car; required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, MOVING_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
 	// ################################################################## define simulation box size, viscosity and volume force ###################################################################
-	const uint3 lbm_N = resolution(float3(1.0f, 2.0f, 0.5f), 4000u); // input: simulation box aspect ratio and VRAM occupation in MB, output: grid resolution
+	const uint3 lbm_N = resolution(float3(1.0f, 2.0f, 0.5f), 800u); // input: simulation box aspect ratio and VRAM occupation in MB, output: grid resolution. Default = 4GB
 	const float lbm_u = 0.1f;
 	const float lbm_length = 0.8f*(float)lbm_N.y;
-	const float si_T = 0.25f;
+	const float si_T = 0.1f; //Default = 0.25
 	const float si_u = 100.0f/3.6f;
 	const float si_length=5.5f, si_width=2.0f;
 	const float si_nu=1.48E-5f, si_rho=1.225f;
@@ -894,11 +894,13 @@ void main_setup() { // Bell 222 helicopter; required extensions in defines.hpp: 
 	print_info("Re = "+to_string(to_uint(units.si_Re(si_width, si_u, si_nu))));
 	print_info(to_string(si_T, 3u)+" seconds = "+to_string(units.t(si_T))+" time steps");
 	print_info("1 cell = "+to_string(1000.0f*units.si_x(1.0f), 2u)+" mm");
-	LBM lbm(lbm_N, 1u, 1u, 1u, units.nu(si_nu));
+	const float nu = units.nu(si_nu);
+	print_info("Recommended nu = " + to_string(nu));
+	LBM lbm(lbm_N, 1u, 1u, 1u, nu);
 	// ###################################################################################### define geometry ######################################################################################
-	Mesh* body = read_stl(get_exe_path()+"../stl/mercedesf1-body.stl"); // https://downloadfree3d.com/3d-models/vehicles/sports-car/mercedes-f1-w14/
-	Mesh* front_wheels = read_stl(get_exe_path()+"../stl/mercedesf1-front-wheels.stl"); // wheels separated, decals removed and converted to .stl in Microsoft 3D Builder
-	Mesh* back_wheels = read_stl(get_exe_path()+"../stl/mercedesf1-back-wheels.stl"); // to avoid instability from too small gaps: remove front wheel fenders and move out right back wheel a bit
+	Mesh* body = read_stl(get_exe_path()+"../stl/mercedes-f1-body.stl"); // https://downloadfree3d.com/3d-models/vehicles/sports-car/mercedes-f1-w14/
+	Mesh* front_wheels = read_stl(get_exe_path()+"../stl/mercedes-f1-front-wheels.stl"); // wheels separated, decals removed and converted to .stl in Microsoft 3D Builder
+	Mesh* back_wheels = read_stl(get_exe_path()+"../stl/mercedes-f1-rear-wheels.stl"); // to avoid instability from too small gaps: remove front wheel fenders and move out right back wheel a bit
 	const float scale = lbm_length/body->get_bounding_box_size().y; // scale parts
 	body->scale(scale);
 	front_wheels->scale(scale);

@@ -34,6 +34,7 @@ g++ ./src/*.cpp -o ./bin/FluidX3D_TIE -std=c++17 -pthread -I./src/OpenCL/include
 g++ ./src/*.cpp -o ./bin/FluidX3D_R_Fan -std=c++17 -pthread -I./src/OpenCL/include -L./src/OpenCL/lib -lOpenCL
 g++ ./src/*.cpp -o ./bin/FluidX3D_EDF -std=c++17 -pthread -I./src/OpenCL/include -L./src/OpenCL/lib -lOpenCL
 g++ ./src/*.cpp -o ./bin/FluidX3D_Bell222 -std=c++17 -pthread -I./src/OpenCL/include -L./src/OpenCL/lib -lOpenCL
+g++ ./src/*.cpp -o ./bin/FluidX3D_F1_W14 -std=c++17 -pthread -I./src/OpenCL/include -L./src/OpenCL/lib -lOpenCL
 
 ./bin/FluidX3D 
 
