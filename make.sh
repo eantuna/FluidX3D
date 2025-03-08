@@ -13,3 +13,4 @@ g++ ./src/*.cpp -o ./bin/FluidX3D -std=c++17 -pthread -I./src/OpenCL/include -L.
 
 # g++ ./src/*.cpp -o ./bin/FluidX3D-X-Wing -std=c++17 -pthread -I./src/OpenCL/include -framework OpenCL
 # g++ ./src/*.cpp -o ./bin/FluidX3D-EDF -std=c++17 -pthread -I./src/OpenCL/include -framework OpenCL
+# g++ ./src/*.cpp -o ./bin/FluidX3D-Bell222 -std=c++17 -pthread -I./src/OpenCL/include -framework OpenCL

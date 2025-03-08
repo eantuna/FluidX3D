@@ -536,7 +536,7 @@ void main_setup() { // benchmark; required extensions in defines.hpp: BENCHMARK,
 
 
 
-void main_setup() { // electric ducted fan (EDF); required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, MOVING_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
+/*void main_setup() { // electric ducted fan (EDF); required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, MOVING_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
 	// ################################################################## define simulation box size, viscosity and volume force ###################################################################
 	const uint3 lbm_N = resolution(float3(1.0f, 1.5f, 1.0f), 800u); // input: simulation box aspect ratio and VRAM occupation in MB, output: grid resolution
 	const float lbm_Re = 1000000.0f;
@@ -813,9 +813,9 @@ void main_setup() { // electric ducted fan (EDF); required extensions in defines
 
 
 
-/*void main_setup() { // Bell 222 helicopter; required extensions in defines.hpp: FP16C, EQUILIBRIUM_BOUNDARIES, MOVING_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
+void main_setup() { // Bell 222 helicopter; required extensions in defines.hpp: FP16C, EQUILIBRIUM_BOUNDARIES, MOVING_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
 	// ################################################################## define simulation box size, viscosity and volume force ###################################################################
-	const uint3 lbm_N = resolution(float3(1.0f, 1.2f, 0.3f), 8000u); // input: simulation box aspect ratio and VRAM occupation in MB, output: grid resolution
+	const uint3 lbm_N = resolution(float3(1.0f, 1.2f, 0.3f), 2000u); // input: simulation box aspect ratio and VRAM occupation in MB, output: grid resolution
 	const float lbm_u = 0.16f;
 	const float lbm_length = 0.8f*(float)lbm_N.x;
 	const float si_T = 0.34483f; // 2 revolutions of the main rotor
@@ -826,11 +826,13 @@ void main_setup() { // electric ducted fan (EDF); required extensions in defines
 	units.set_m_kg_s(lbm_length, lbm_u, 1.0f, si_length, si_u, si_rho);
 	print_info(to_string(si_T, 3u)+" seconds = "+to_string(units.t(si_T))+" time steps");
 	print_info("1 cell = "+to_string(1000.0f*units.si_x(1.0f), 2u)+" mm");
-	LBM lbm(lbm_N, 1u, 1u, 1u, units.nu(si_nu));
+	const float nu = units.nu(si_nu);
+	print_info("Recommended nu = " + to_string(nu));
+	LBM lbm(lbm_N, nu);
 	// ###################################################################################### define geometry ######################################################################################
 	Mesh* body = read_stl(get_exe_path()+"../stl/Bell-222-body.stl"); // https://www.thingiverse.com/thing:1625155/files
 	Mesh* main = read_stl(get_exe_path()+"../stl/Bell-222-main.stl"); // body and rotors separated with Microsoft 3D Builder
-	Mesh* back = read_stl(get_exe_path()+"../stl/Bell-222-back.stl");
+	Mesh* back = read_stl(get_exe_path()+"../stl/Bell-222-rear.stl");
 	const float scale = lbm_length/body->get_bounding_box_size().y; // scale body and rotors to simulation box size
 	body->scale(scale);
 	main->scale(scale);
