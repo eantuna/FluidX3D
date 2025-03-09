@@ -15,3 +15,4 @@ g++ ./src/*.cpp -o ./bin/FluidX3D -std=c++17 -pthread -I./src/OpenCL/include -L.
 # g++ ./src/*.cpp -o ./bin/FluidX3D-EDF -std=c++17 -pthread -I./src/OpenCL/include -framework OpenCL
 # g++ ./src/*.cpp -o ./bin/FluidX3D-Bell222 -std=c++17 -pthread -I./src/OpenCL/include -framework OpenCL
 # g++ ./src/*.cpp -o ./bin/FluidX3D-F1-W14 -std=c++17 -pthread -I./src/OpenCL/include -framework OpenCL
+# g++ ./src/*.cpp -o ./bin/FluidX3D-Beach -std=c++17 -pthread -I./src/OpenCL/include -framework OpenCL

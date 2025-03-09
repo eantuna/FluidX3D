@@ -881,7 +881,7 @@ void main_setup() { // benchmark; required extensions in defines.hpp: BENCHMARK,
 
 
 
-void main_setup() { // Mercedes F1 W14 car; required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, MOVING_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
+/*void main_setup() { // Mercedes F1 W14 car; required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, MOVING_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
 	// ################################################################## define simulation box size, viscosity and volume force ###################################################################
 	const uint3 lbm_N = resolution(float3(1.0f, 2.0f, 0.5f), 800u); // input: simulation box aspect ratio and VRAM occupation in MB, output: grid resolution. Default = 4GB
 	const float lbm_u = 0.1f;
@@ -1026,14 +1026,19 @@ void main_setup() { // Mercedes F1 W14 car; required extensions in defines.hpp: 
 
 
 
-/*void main_setup() { // breaking waves on beach; required extensions in defines.hpp: FP16S, VOLUME_FORCE, EQUILIBRIUM_BOUNDARIES, SURFACE, INTERACTIVE_GRAPHICS
+void main_setup() { // breaking waves on beach; required extensions in defines.hpp: FP16S, VOLUME_FORCE, EQUILIBRIUM_BOUNDARIES, SURFACE, INTERACTIVE_GRAPHICS
 	// ################################################################## define simulation box size, viscosity and volume force ###################################################################
 	const float f = 0.001f; // make smaller
 	const float u = 0.12f; // peak velocity of speaker membrane
-	const float frequency = 0.0007f; // amplitude = u/(2.0f*pif*frequency);
-	LBM lbm(128u, 640u, 96u, 0.01f, 0.0f, 0.0f, -f);
+	const float frequency = 0.0006f; // amplitude = u/(2.0f*pif*frequency);
+	// LBM lbm(128u, 640u, 96u, 0.01f, 0.0f, 0.0f, -f);
+	const uint3 lbm_N = resolution(float3(1.0f, 5.0f, 0.75f), 1000u);
+	LBM lbm(lbm_N, 0.03f, 0.0f, 0.0f, -f);
 	// ###################################################################################### define geometry ######################################################################################
-	const uint Nx=lbm.get_Nx(), Ny=lbm.get_Ny(), Nz=lbm.get_Nz(); parallel_for(lbm.get_N(), [&](ulong n) { uint x=0u, y=0u, z=0u; lbm.coordinates(n, x, y, z);
+	const uint Nx=lbm.get_Nx(), Ny=lbm.get_Ny(), Nz=lbm.get_Nz(); 
+	parallel_for(lbm.get_N(), [&](ulong n) { 
+		uint x=0u, y=0u, z=0u; 
+		lbm.coordinates(n, x, y, z);
 		const uint H = Nz/2u;
 		if(z<H) {
 			lbm.flags[n] = TYPE_F;
@@ -1045,7 +1050,7 @@ void main_setup() { // Mercedes F1 W14 car; required extensions in defines.hpp: 
 	}); // ####################################################################### run simulation, export images and data ##########################################################################
 	lbm.graphics.visualization_modes = VIS_FLAG_LATTICE | (lbm.get_D()==1u ? VIS_PHI_RAYTRACE : VIS_PHI_RASTERIZE);
 	lbm.run(0u); // initialize simulation
-	while(true) { // main simulation loop
+	while(lbm.get_t() < 11000u) { // main simulation loop
 		lbm.u.read_from_device();
 		const float uy = u*sinf(2.0f*pif*frequency*(float)lbm.get_t());
 		const float uz = 0.5f*u*cosf(2.0f*pif*frequency*(float)lbm.get_t());
@@ -1059,7 +1064,8 @@ void main_setup() { // Mercedes F1 W14 car; required extensions in defines.hpp: 
 			}
 		}
 		lbm.u.write_to_device();
-		lbm.run(100u);
+		lbm.graphics.write_frame_png(get_exe_path() + "export/a/");
+		lbm.run(20u);
 	}
 } /**/
 
