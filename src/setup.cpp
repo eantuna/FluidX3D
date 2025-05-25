@@ -886,7 +886,53 @@ void main_setup() { // benchmark; required extensions in defines.hpp: BENCHMARK,
 	}
 } /**/
 
-
+/*void main_setup() { // Ferrari F1 car (v1)
+	// ######################################################### define simulation box size, viscosity and volume force ############################################################################
+	const uint L = 501u; // 2152u on 8x MI200, 96u default
+	const float kmh = 100.0f;
+	const float si_u = kmh/3.6f;
+	const float si_x = 2.0f;
+	const float si_rho = 1.225f;
+	const float si_nu = 1.48E-5f;
+	const float Re = units.si_Re(si_x, si_u, si_nu);
+	print_info("Re = "+to_string(Re));
+	const float u = 0.08f;
+	const float size = 1.6f*(float)L;
+	units.set_m_kg_s(size*2.0f/5.5f, u, 1.0f, si_x, si_u, si_rho);
+	float nu = units.nu(si_nu);
+	print_info("1s = "+to_string(units.t(1.0f)));
+	print_info("Recommended nu = " + to_string(nu));
+	nu = 0.0000064f;
+	print_info("Actual nu = " + to_string(nu));
+	LBM lbm(L, L*2u, L/2u, nu);
+	// #############################################################################################################################################################################################
+	const float3 center = float3(lbm.center().x, 0.525f*size, 0.116f*size);
+	lbm.voxelize_stl(get_exe_path()+"../stl/Ferrari_SF71H_V5.stl", center, size); // https://www.thingiverse.com/thing:2990512/files
+	const uint N=lbm.get_N(), Nx=lbm.get_Nx(), Ny=lbm.get_Ny(), Nz=lbm.get_Nz();
+	for(uint n=0u, x=0u, y=0u, z=0u; n<N; n++, lbm.coordinates(n, x, y, z)) {
+		// ########################################################################### define geometry #############################################################################################
+		if(lbm.flags[n]!=TYPE_S) lbm.u.y[n] = u;
+		if(x==0u||x==Nx-1u||y==0u||y==Ny-1u||z==Nz-1u) lbm.flags[n] = TYPE_E;
+		if(z==0u) lbm.flags[n] = TYPE_S;
+	}	// #########################################################################################################################################################################################
+	lbm.graphics.visualization_modes = VIS_FLAG_SURFACE | VIS_Q_CRITERION;
+#if defined(GRAPHICS) && !defined(INTERACTIVE_GRAPHICS)
+	Clock clock;
+	lbm.run(0u);
+	while(lbm.get_t()<=units.t(1.0f)) {
+		lbm.graphics.set_camera_free(float3(0.779346f*(float)Nx, -0.315650f*(float)Ny, 0.329444f*(float)Nz), -27.0f, 19.0f, 100.0f);
+		lbm.graphics.write_frame_png(get_exe_path()+"export/a/");
+		lbm.graphics.set_camera_free(float3(0.556877f*(float)Nx, 0.228191f*(float)Ny, 1.159613f*(float)Nz), 19.0f, 53.0f, 100.0f);
+		lbm.graphics.write_frame_png(get_exe_path()+"export/b/");
+		lbm.graphics.set_camera_free(float3(0.220650f*(float)Nx, -0.589529f*(float)Ny, 0.085407f*(float)Nz), -72.0f, 21.0f, 86.0f);
+		lbm.graphics.write_frame_png(get_exe_path()+"export/c/");
+		lbm.run(32u); // run LBM in parallel while CPU is voxelizing the next frame
+	}
+	write_file(get_exe_path()+"time.txt", print_time(clock.stop()));
+#else // GRAPHICS && !INTERACTIVE_GRAPHICS
+	lbm.run();
+#endif // GRAPHICS && !INTERACTIVE_GRAPHICS
+} /**/
 
 /*void main_setup() { // Mercedes F1 W14 car; required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, MOVING_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
 	// ################################################################## define simulation box size, viscosity and volume force ###################################################################
