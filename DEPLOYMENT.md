@@ -50,3 +50,11 @@ ffmpeg -framerate 60 -pattern_type glob -i "*/image-*.png" -pix_fmt yuv420p Flui
 ffmpeg -framerate 60 -pattern_type glob -i "*/image-*.png" -c:v libx264 -pix_fmt yuv420p -b:v 24M FluidX3D_X_Wing.mp4
 ffmpeg -i FluidX3D_X_Wing_15100MB_NU7E4.mp4 -i The\ Force\ \(Piano\ \&\ Strings\)\ \[Mastered\].mp3 -shortest -c:v copy -map 0:v:0 -map 1:a:0 -c:a aac -b:a 192k FluidX3D_X_Wing_15100MB_NU7E4_WA.mp4
 ffmpeg -i FluidX3D_X_Wing_15100MB_NU7E4_WA.mp4 -r 30 FluidX3D_X_Wing_15100MB_NU7E4_30FPS.mp4
+
+# Build OSX
+
+g++ ./src/*.cpp -o ./bin/FluidX3D-X-Wing -std=c++17 -pthread -I./src/OpenCL/include -framework OpenCL
+g++ ./src/*.cpp -o ./bin/FluidX3D-EDF -std=c++17 -pthread -I./src/OpenCL/include -framework OpenCL
+g++ ./src/*.cpp -o ./bin/FluidX3D-Bell222 -std=c++17 -pthread -I./src/OpenCL/include -framework OpenCL
+g++ ./src/*.cpp -o ./bin/FluidX3D-F1-W14 -std=c++17 -pthread -I./src/OpenCL/include -framework OpenCL
+g++ ./src/*.cpp -o ./bin/FluidX3D-Beach -std=c++17 -pthread -I./src/OpenCL/include -framework OpenCL

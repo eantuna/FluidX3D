@@ -1,4 +1,7 @@
 bin/
+temp/
 stl/
 exports/
 builds/
+.vs/
+FluidX3D.vcxproj.user
