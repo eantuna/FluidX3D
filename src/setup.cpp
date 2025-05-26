@@ -433,9 +433,9 @@ void main_setup() { // benchmark; required extensions in defines.hpp: BENCHMARK,
 
 
 
-/*void main_setup() { // Star Wars X-wing; required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
+void main_setup() { // Star Wars X-wing; required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
 	// ################################################################## define simulation box size, viscosity and volume force ###################################################################
-	const uint3 lbm_N = resolution(float3(1.0f, 2.0f, 0.5f), 880u); // input: simulation box aspect ratio and VRAM occupation in MB, output: grid resolution
+	const uint3 lbm_N = resolution(float3(1.0f, 2.0f, 0.5f), 7020u); // input: simulation box aspect ratio and VRAM occupation in MB, output: grid resolution
 	const float lbm_Re = 100000.0f;
 	const float lbm_u = 0.075f;
 	const ulong lbm_T = 50000ull;
@@ -888,7 +888,7 @@ void main_setup() { // benchmark; required extensions in defines.hpp: BENCHMARK,
 
 /*void main_setup() { // Ferrari F1 car (v1)
 	// ######################################################### define simulation box size, viscosity and volume force ############################################################################
-	const uint L = 501u; // 2152u on 8x MI200, 96u default
+	const uint L = 511u; // 2152u on 8x MI200, 96u default
 	const float kmh = 100.0f;
 	const float si_u = kmh/3.6f;
 	const float si_x = 2.0f;
