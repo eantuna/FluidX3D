@@ -355,7 +355,7 @@ void main_setup() { // benchmark; required extensions in defines.hpp: BENCHMARK,
 
 /*void main_setup() { // Concorde; required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS
 	// ################################################################## define simulation box size, viscosity and volume force ###################################################################
-	const uint3 lbm_N = resolution(float3(1.0f, 3.0f, 0.5f), 2084u); // input: simulation box aspect ratio and VRAM occupation in MB, output: grid resolution
+	const uint3 lbm_N = resolution(float3(1.0f, 3.0f, 0.5f), 7000u); // input: simulation box aspect ratio and VRAM occupation in MB, output: grid resolution
 	const float si_u = 300.0f/3.6f;
 	const float si_length=62.0f, si_width=26.0f;
 	const float si_T = 1.0f;
@@ -433,7 +433,7 @@ void main_setup() { // benchmark; required extensions in defines.hpp: BENCHMARK,
 
 
 
-void main_setup() { // Star Wars X-wing; required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
+/*void main_setup() { // Star Wars X-wing; required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
 	// ################################################################## define simulation box size, viscosity and volume force ###################################################################
 	const uint3 lbm_N = resolution(float3(1.0f, 2.0f, 0.5f), 7020u); // input: simulation box aspect ratio and VRAM occupation in MB, output: grid resolution
 	const float lbm_Re = 100000.0f;
@@ -474,7 +474,7 @@ void main_setup() { // Star Wars X-wing; required extensions in defines.hpp: FP1
 
 /*void main_setup() { // Star Wars TIE fighter; required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
 	// ################################################################## define simulation box size, viscosity and volume force ###################################################################
-	const uint3 lbm_N = resolution(float3(1.0f, 2.0f, 1.0f), 1760u); // input: simulation box aspect ratio and VRAM occupation in MB, output: grid resolution
+	const uint3 lbm_N = resolution(float3(1.0f, 2.0f, 1.0f), 7000u); // input: simulation box aspect ratio and VRAM occupation in MB, output: grid resolution
 	const float lbm_Re = 100000.0f;
 	const float lbm_u = 0.075f;
 	const ulong lbm_T = 50000ull;
@@ -549,14 +549,18 @@ void main_setup() { // Star Wars X-wing; required extensions in defines.hpp: FP1
 
 
 
-/*void main_setup() { // electric ducted fan (EDF); required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, MOVING_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
+void main_setup() { // electric ducted fan (EDF); required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, MOVING_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
 	// ################################################################## define simulation box size, viscosity and volume force ###################################################################
-	const uint3 lbm_N = resolution(float3(1.0f, 1.5f, 1.0f), 8000u); // input: simulation box aspect ratio and VRAM occupation in MB, output: grid resolution
+	const uint3 lbm_N = resolution(float3(1.0f, 1.5f, 1.0f), 5600u); // input: simulation box aspect ratio and VRAM occupation in MB, output: grid resolution
 	const float lbm_Re = 1000000.0f;
 	const float lbm_u = 0.1f;
 	const ulong lbm_T = 180000ull;
 	const ulong lbm_dt = 4ull;
-	LBM lbm(lbm_N, units.nu_from_Re(lbm_Re, (float)lbm_N.x, lbm_u));
+	float nu = units.nu_from_Re(lbm_Re, (float)lbm_N.x, lbm_u);
+	print_info("Recommended nu = " + to_string(nu));
+	//nu = 0.0000848f;
+	//print_info("Actual nu = " + to_string(nu));
+	LBM lbm(lbm_N, nu);
 	// ###################################################################################### define geometry ######################################################################################
 	const float3 center = lbm.center();
 	const float3x3 rotation = float3x3(float3(0, 0, 1), radians(180.0f));
