@@ -51,6 +51,11 @@ ffmpeg -framerate 60 -pattern_type glob -i "*/image-*.png" -c:v libx264 -pix_fmt
 ffmpeg -i FluidX3D_X_Wing_15100MB_NU7E4.mp4 -i The\ Force\ \(Piano\ \&\ Strings\)\ \[Mastered\].mp3 -shortest -c:v copy -map 0:v:0 -map 1:a:0 -c:a aac -b:a 192k FluidX3D_X_Wing_15100MB_NU7E4_WA.mp4
 ffmpeg -i FluidX3D_X_Wing_15100MB_NU7E4_WA.mp4 -r 30 FluidX3D_X_Wing_15100MB_NU7E4_30FPS.mp4
 
+ ffmpeg -framerate 60 -pattern_type glob -i "export/*/image-*.png" -c:v libx264 -pix_fmt yuv420p -b:v 24M "video.mp4"
+ ffmpeg -framerate 60 -pattern_type glob -i "export/image-*.png" -c:v libx264 -pix_fmt yuv420p -b:v 24M FluidX3D_EDF.mp4
+ ffmpeg -framerate 60 -pattern_type glob -i "export/image-*.png" -c:v libx264 -preset slow -crf 18 -pix_fmt yuv420p -vf "scale=1920:1080:flags=lanczos" FluidX3D_EDF.mp4
+
+
 # Build OSX
 
 g++ ./src/*.cpp -o ./bin/FluidX3D-X-Wing -std=c++17 -pthread -I./src/OpenCL/include -framework OpenCL
