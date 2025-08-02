@@ -2,8 +2,8 @@
 
 The fastest and most memory efficient lattice Boltzmann CFD software, running on all GPUs and CPUs via [OpenCL](https://github.com/ProjectPhysX/OpenCL-Wrapper "OpenCL-Wrapper"). Free for non-commercial use.
 
-<a href="https://youtu.be/-MkRBeQkLk8"><img src="https://img.youtube.com/vi/o3TPN142HxM/maxresdefault.jpg" width="50%"></img></a><a href="https://youtu.be/oC6U1M0Fsug"><img src="https://img.youtube.com/vi/oC6U1M0Fsug/maxresdefault.jpg" width="50%"></img></a><br>
-<a href="https://youtu.be/XOfXHgP4jnQ"><img src="https://img.youtube.com/vi/XOfXHgP4jnQ/maxresdefault.jpg" width="50%"></img></a><a href="https://youtu.be/K5eKxzklXDA"><img src="https://img.youtube.com/vi/K5eKxzklXDA/maxresdefault.jpg" width="50%"></img></a>
+<a href="https://youtu.be/-MkRBeQkLk8"><img src="https://img.youtube.com/vi/o3TPN142HxM/maxresdefault.jpg" width="50%"></img></a><a href="https://youtu.be/1z5-ddsmAag"><img src="https://img.youtube.com/vi/1z5-ddsmAag/maxresdefault.jpg" width="50%"></img></a><br>
+<a href="https://youtu.be/2BPP1oWzvi0"><img src="https://img.youtube.com/vi/2BPP1oWzvi0/maxresdefault.jpg" width="50%"></img></a><a href="https://youtu.be/K5eKxzklXDA"><img src="https://img.youtube.com/vi/K5eKxzklXDA/maxresdefault.jpg" width="50%"></img></a>
 (click on images to show videos on YouTube)
 
 <details><summary>Update History</summary>
@@ -230,6 +230,12 @@ The fastest and most memory efficient lattice Boltzmann CFD software, running on
   - fixed missing `<chrono>` header on some compilers
   - fixed bug in `split_regex()`
   - fixed compiler warning with `min_int`
+- [v3.4](https://github.com/ProjectPhysX/FluidX3D/releases/tag/v3.4) (02.07.2025) [changes](https://github.com/ProjectPhysX/FluidX3D/compare/v3.3...v3.4) (bug fixes)
+  - updated OpenCL driver install versions
+  - minor refactoring in `stream_collide()`
+  - fixed bug in insertion-sort in `voxelize_mesh()` kernel causing crash on AMD GPUs
+  - fixed bug in `voxelize_mesh_on_device()` host code causing initialization corruption on AMD GPUs
+  - fixed dual CU and IPC reporting on AMD RDNA 1-4 GPUs
 
 </details>
 
@@ -611,6 +617,8 @@ section RX 7900 GRE
 	4570 :crit, 0, 4570
 section PRO W7700
 	2943 :crit, 0, 2943
+section RX 7700 XT
+	2828 :crit, 0, 2828
 section RX 7600
 	2561 :crit, 0, 2561
 section PRO W7600
@@ -667,6 +675,10 @@ section HD 7870
 	868 :crit, 0, 868
 section HD 7850
 	635 :crit, 0, 635
+section HD 5870
+	257 :crit, 0, 257
+section FirePro V5800
+	108 :crit, 0, 108
 section Arc B580 LE
 	4979 :done, 0, 4979
 section Arc A770 LE
@@ -843,6 +855,18 @@ section K2000
 	444 : 0, 444
 section GT 630 (OEM)
 	185 : 0, 185
+section GTX 580
+	1481 : 0, 1481
+section GTX 560 Ti
+	895 : 0, 895
+section GTX 480
+	1264 : 0, 1264
+section GTX 280
+	462 : 0, 462
+section GTX 260
+	421 : 0, 421
+section FX 5800
+	296 : 0, 296
 section NVS 290
 	9 : 0, 9
 section Arise 1020
@@ -1055,6 +1079,7 @@ Colors: 🔴 AMD, 🔵 Intel, 🟢 Nvidia, ⚪ Apple, 🟡 ARM, 🟤 Glenfly
 | 🔴&nbsp;Radeon&nbsp;PRO&nbsp;W7800               |              45.20 |          32 |          576 |             1872 (50%) |              4426 (59%) |              4145 (55%) |
 | 🔴&nbsp;Radeon&nbsp;RX&nbsp;7900&nbsp;GRE        |              42.03 |          16 |          576 |             1996 (53%) |              4570 (61%) |              4463 (60%) |
 | 🔴&nbsp;Radeon&nbsp;PRO&nbsp;W7700               |              28.30 |          16 |          576 |             1547 (41%) |              2943 (39%) |              2899 (39%) |
+| 🔴&nbsp;Radeon&nbsp;RX&nbsp;7700&nbsp;XT         |              30.77 |          12 |          432 |             1405 (50%) |              2702 (48%) |              2828 (50%) |
 | 🔴&nbsp;Radeon&nbsp;RX&nbsp;7600                 |              21.75 |           8 |          288 |             1250 (66%) |              2561 (68%) |              2512 (67%) |
 | 🔴&nbsp;Radeon&nbsp;PRO&nbsp;W7600               |              20.00 |           8 |          288 |             1179 (63%) |              2263 (61%) |              2287 (61%) |
 | 🔴&nbsp;Radeon&nbsp;PRO&nbsp;W7500               |              12.20 |           8 |          172 |              856 (76%) |              1630 (73%) |              1682 (75%) |
@@ -1083,6 +1108,8 @@ Colors: 🔴 AMD, 🔵 Intel, 🟢 Nvidia, ⚪ Apple, 🟡 ARM, 🟤 Glenfly
 | 🔴&nbsp;Radeon&nbsp;HD&nbsp;7970                 |               3.79 |           3 |          264 |              193 (11%) |              1270 (37%) |              1563 (46%) |
 | 🔴&nbsp;Radeon&nbsp;HD&nbsp;7870                 |               2.56 |           2 |          154 |              105 (10%) |               716 (36%) |               868 (44%) |
 | 🔴&nbsp;Radeon&nbsp;HD&nbsp;7850                 |               1.84 |           2 |          154 |              112 (11%) |               120 ( 6%) |               635 (32%) |
+| 🔴&nbsp;Radeon&nbsp;HD&nbsp;5870                 |               2.72 |           1 |          154 |              257 (26%) |               111 ( 6%) |               141 ( 7%) |
+| 🔴&nbsp;FirePro&nbsp;V5800                       |               1.10 |           1 |           64 |              108 (26%) |                52 ( 6%) |                66 ( 8%) |
 | 🔵&nbsp;Arc&nbsp;B580&nbsp;LE                    |              14.59 |          12 |          456 |             2598 (87%) |              4443 (75%) |              4979 (84%) |
 | 🔵&nbsp;Arc&nbsp;A770&nbsp;LE                    |              19.66 |          16 |          560 |             2663 (73%) |              4568 (63%) |              4519 (62%) |
 | 🔵&nbsp;Arc&nbsp;A750&nbsp;LE                    |              17.20 |           8 |          512 |             2555 (76%) |              4314 (65%) |              4047 (61%) |
@@ -1171,7 +1198,13 @@ Colors: 🔴 AMD, 🔵 Intel, 🟢 Nvidia, ⚪ Apple, 🟡 ARM, 🟤 Glenfly
 | 🟢&nbsp;GeForce&nbsp;GTX&nbsp;660                |               1.98 |           2 |          144 |              505 (54%) |              1146 (61%) |               489 (26%) |
 | 🟢&nbsp;Quadro&nbsp;K2000                        |               0.73 |           2 |           64 |              312 (75%) |               444 (53%) |               171 (21%) |
 | 🟢&nbsp;GeForce&nbsp;GT&nbsp;630&nbsp;(OEM)      |               0.46 |           2 |           29 |              151 (81%) |               185 (50%) |                78 (21%) |
-| 🟢&nbsp;Quadro&nbsp;NVS&nbsp;290                 |               0.03 |         1/4 |            6 |                9 (22%) |                 4 ( 5%) |                 4 ( 5%) |
+| 🟢&nbsp;GeForce&nbsp;GTX&nbsp;580                |               1.58 |         1.5 |          192 |             1028 (82%) |              1481 (59%) |               599 (24%) |
+| 🟢&nbsp;GeForce&nbsp;GTX&nbsp;560&nbsp;Ti        |               1.26 |           1 |          128 |              661 (79%) |               895 (54%) |               415 (25%) |
+| 🟢&nbsp;GeForce&nbsp;GTX&nbsp;480                |               1.35 |         1.5 |          177 |              908 (78%) |              1264 (55%) |               509 (22%) |
+| 🟢&nbsp;GeForce&nbsp;GTX&nbsp;280                |               0.62 |           1 |          142 |              409 (44%) |               462 (25%) |               209 (11%) |
+| 🟢&nbsp;GeForce&nbsp;GTX&nbsp;260                |               0.48 |         0.9 |          111 |              345 (47%) |               421 (29%) |               160 (11%) |
+| 🟢&nbsp;Quadro&nbsp;FX&nbsp;5800                 |               0.62 |           4 |          102 |              296 (44%) |               268 (20%) |               211 (16%) |
+| 🟢&nbsp;Quadro&nbsp;NVS&nbsp;290                 |               0.03 |        0.25 |            6 |                9 (22%) |                 4 ( 5%) |                 4 ( 5%) |
 | 🟤&nbsp;Arise&nbsp;1020                          |               1.50 |           2 |           19 |                6 ( 5%) |                 6 ( 2%) |                 6 ( 2%) |
 |                                                  |                    |             |              |                        |                         |                         |
 | ⚪&nbsp;M2&nbsp;Ultra&nbsp;GPU&nbsp;76CU&nbsp;192GB |           19.46 |         147 |          800 |             4629 (89%) |              8769 (84%) |              7972 (77%) |
@@ -1351,6 +1384,17 @@ section 2x Radeon VII
 section 1x Radeon VII
 	7778 :crit, 0, 7778
 
+section 1x Radeon Pro Duo (2 GPUs)
+	3310 :crit, 0, 3310
+section 1x R9 295X2 (2 GPUs)
+	2428 :crit, 0, 2428
+section 1x HD 7990 (2 GPUs)
+	2314 :crit, 0, 2314
+section 1x HD 6990 (2 GPUs)
+	344 :crit, 0, 344
+section 1x HD 5970 (2 GPUs)
+	360 :crit, 0, 360
+
 section 4x GPU Max 1100
 	22777 :done, 0, 22777
 section 2x GPU Max 1100
@@ -1481,13 +1525,18 @@ section 2x GeForce RTX 2080 Ti
 section 1x GeForce RTX 2080 Ti
 	6853 : 0, 6853
 
+section 1x GTX 690 (2 GPUs)
+	920 : 0, 920
+
 section 2x Arc A770
 	8745 :done, 0, 8745
 section 1x Arc A770
 	4568 :done, 0, 4568
 
 section 1x A100 + 1x P100 + 2x A2 + 3x MI50 + 1x A770
-	17296 :active,done, 0, 17296
+	17296 :active,crit, 0, 17296
+section 1x 7700 XT + 1x B580 + 1x Titan Xp
+	8358 :active,crit, 0, 8358
 section 1x A770 + 1x Titan Xp
 	8380 :active,done, 0, 8380
 ```
@@ -1530,6 +1579,12 @@ Colors: 🔴 AMD, 🔵 Intel, 🟢 Nvidia, ⚪ Apple, 🟡 ARM, 🟤 Glenfly
 | 🔴&nbsp;4x&nbsp;Radeon&nbsp;VII                                 |              55.32 |          64 |         4096 |      12911&nbsp;(2.6x) |            24273 (3.1x) |            17080 (3.2x) |
 | 🔴&nbsp;2x&nbsp;Radeon&nbsp;VII                                 |              27.66 |          32 |         2048 |            8113 (1.7x) |            15591 (2.0x) |            10352 (2.0x) |
 | 🔴&nbsp;1x&nbsp;Radeon&nbsp;VII                                 |              13.83 |          16 |         1024 |             4898 (73%) |              7778 (58%) |              5256 (40%) |
+|                                                                 |                    |             |              |                        |                         |                         |
+| 🔴&nbsp;1x&nbsp;Radeon&nbsp;Pro&nbsp;Duo (2&nbsp;GPUs)          |              16.38 |           8 |         1024 |             1945 (29%) |              3310 (25%) |              2879 (22%) |
+| 🔴&nbsp;1x&nbsp;R9&nbsp;295X2&nbsp;(2&nbsp;GPUs)                |              11.47 |           8 |          640 |             1727 (41%) |              2428 (29%) |              1989 (24%) |
+| 🔴&nbsp;1x&nbsp;HD&nbsp;7990&nbsp;(2&nbsp;GPUs)                 |               8.19 |           6 |          576 |             1552 (41%) |              1996 (27%) |              2314 (31%) |
+| 🔴&nbsp;1x&nbsp;HD&nbsp;6990&nbsp;(2&nbsp;GPUs)                 |               5.41 |           4 |          320 |              344 (16%) |               214 ( 5%) |               255 ( 6%) |
+| 🔴&nbsp;1x&nbsp;HD&nbsp;5970&nbsp;(2&nbsp;GPUs)                 |               3.76 |           2 |          256 |              360 (22%) |               181 ( 5%) |               224 ( 7%) |
 |                                                                 |                    |             |              |                        |                         |                         |
 | 🔵&nbsp;4x&nbsp;DC&nbsp;GPU&nbsp;Max&nbsp;1100                  |              88.88 |         192 |         4915 |           12162 (3.5x) |            22777 (3.7x) |            11759 (3.6x) |
 | 🔵&nbsp;2x&nbsp;DC&nbsp;GPU&nbsp;Max&nbsp;1100                  |              44.44 |          96 |         2458 |            6301 (1.8x) |            11815 (1.9x) |             5970 (1.8x) |
@@ -1605,10 +1660,13 @@ Colors: 🔴 AMD, 🔵 Intel, 🟢 Nvidia, ⚪ Apple, 🟡 ARM, 🟤 Glenfly
 | 🟢&nbsp;2x&nbsp;GeForce&nbsp;RTX&nbsp;2080&nbsp;Ti              |              26.90 |          22 |         1232 |            5085 (1.6x) |            10770 (1.6x) |            10922 (1.6x) |
 | 🟢&nbsp;1x&nbsp;GeForce&nbsp;RTX&nbsp;2080&nbsp;Ti              |              13.45 |          11 |          616 |             3194 (79%) |              6700 (84%) |              6853 (86%) |
 |                                                                 |                    |             |              |                        |                         |                         |
+| 🟢&nbsp;1x&nbsp;GTX&nbsp;690&nbsp;(2&nbsp;GPUs)                 |               6.26 |           4 |          385 |              587 (23%) |               920 (18%) |               535 (11%) |
+|                                                                 |                    |             |              |                        |                         |                         |
 | 🔵&nbsp;2x&nbsp;Arc&nbsp;A770                                   |              39.32 |          32 |         1120 |            4954 (1.9x) |             8745 (1.9x) |             8329 (1.8x) |
 | 🔵&nbsp;1x&nbsp;Arc&nbsp;A770                                   |              19.66 |          16 |          560 |             2663 (73&) |              4568 (63%) |              4519 (62%) |
 |                                                                 |                    |             |              |                        |                         |                         |
 | 🟢&nbsp;1x&nbsp;A100&nbsp;40GB + 🟢&nbsp;1x&nbsp;P100&nbsp;16GB + 🟢&nbsp;2x&nbsp;A2 + 🔴&nbsp;3x&nbsp;MI50&nbsp;32GB + 🔵&nbsp;1x&nbsp;A770&nbsp;16GB | 54.36 | 180 | 2400 | 9903 (63%) | 17296 (55%) | 12041 (39%) |
+| 🔴&nbsp;1x&nbsp;7700&nbsp;XT + 🔵&nbsp;1x&nbsp;B580 + 🟢&nbsp;1x&nbsp;Titan&nbsp;Xp | 36.45 |    36 |         1296 |             3979 (47%) |              8003 (48%) |              8358 (39%) |
 | 🔵&nbsp;1x&nbsp;A770&nbsp;+&nbsp;🟢&nbsp;1x&nbsp;Titan&nbsp;Xp  |              24.30 |          24 |         1095 |             4717 (66%) |              8380 (59%) |              8026 (56%) |
 
 </details>

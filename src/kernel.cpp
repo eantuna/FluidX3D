@@ -1578,23 +1578,17 @@ string opencl_c_container() { return R( // ########################## begin of O
 )+"#endif"+R( // VOLUME_FORCE
 	}
 
-)+"#ifndef EQUILIBRIUM_BOUNDARIES"+R(
 )+"#ifdef UPDATE_FIELDS"+R(
-	rho[               n] = rhon; // update density field
-	u[                 n] = uxn; // update velocity field
-	u[    def_N+(ulong)n] = uyn;
-	u[2ul*def_N+(ulong)n] = uzn;
-)+"#endif"+R( // UPDATE_FIELDS
-)+"#else"+R( // EQUILIBRIUM_BOUNDARIES
-)+"#ifdef UPDATE_FIELDS"+R(
-	if(flagsn_bo!=TYPE_E) { // only update fields for non-TYPE_E cells
+)+"#ifdef EQUILIBRIUM_BOUNDARIES"+R(
+	if(flagsn_bo!=TYPE_E) // only update fields for non-TYPE_E cells
+)+"#endif"+R( // EQUILIBRIUM_BOUNDARIES
+	{
 		rho[               n] = rhon; // update density field
 		u[                 n] = uxn; // update velocity field
 		u[    def_N+(ulong)n] = uyn;
 		u[2ul*def_N+(ulong)n] = uzn;
 	}
 )+"#endif"+R( // UPDATE_FIELDS
-)+"#endif"+R( // EQUILIBRIUM_BOUNDARIES
 
 	float feq[def_velocity_set]; // equilibrium DDFs
 	calculate_f_eq(rhon, uxn, uyn, uzn, feq); // calculate equilibrium DDFs
@@ -2286,14 +2280,14 @@ string opencl_c_container() { return R( // ########################## begin of O
 		}
 	}
 
-	for(int i=1; i<(int)intersections; i++) { // insertion-sort distances
+	for(uint i=1u; i<min(intersections, 64u); i++) { // insertion-sort distances
 		ushort t = distances[i];
-		int j = i-1;
-		while(distances[j]>t&&j>=0) {
-			distances[j+1] = distances[j];
+		uint j = i;
+		while(j>0u&&distances[j-1u]>t) {
+			distances[j] = distances[j-1u];
 			j--;
 		}
-		distances[j+1] = t;
+		distances[j] = t;
 	}
 	bool inside = (intersections%2u)&&(intersections_check%2u);
 	const bool set_u = sq(ux)+sq(uy)+sq(uz)+sq(rx)+sq(ry)+sq(rz)>0.0f;
