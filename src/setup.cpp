@@ -549,7 +549,7 @@ void main_setup() { // benchmark; required extensions in defines.hpp: BENCHMARK,
 
 
 
-void main_setup() { // electric ducted fan (EDF); required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, MOVING_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
+/*void main_setup() { // electric ducted fan (EDF); required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, MOVING_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
 	// ################################################################## define simulation box size, viscosity and volume force ###################################################################
 	const uint3 lbm_N = resolution(float3(1.0f, 1.5f, 1.0f), 5600u); // input: simulation box aspect ratio and VRAM occupation in MB, output: grid resolution
 	const float lbm_Re = 1000000.0f;
@@ -999,6 +999,44 @@ void main_setup() { // electric ducted fan (EDF); required extensions in defines
 #endif // GRAPHICS && !INTERACTIVE_GRAPHICS
 } /**/
 
+void main_setup() { // Ferrari SF25 car; required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, MOVING_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
+	const uint3 lbm_N = resolution(float3(1.0f, 2.0f, 0.5f), 4000u); // input: simulation box aspect ratio and VRAM occupation in MB, output: grid resolution
+	const float lbm_u = 0.075f;
+	const float lbm_length = 0.8f * (float)lbm_N.y;
+	const float kmh = 100.0f;
+	const float si_u = kmh / 3.6f;
+	const float si_length = 5.5f, si_width = 2.0f;
+	const float si_nu = 1.48E-5f;
+	const float si_rho = 1.225f;
+	units.set_m_kg_s(lbm_length, lbm_u, 1.0f, si_length, si_u, si_rho);
+	const float lbm_nu = units.nu(si_nu);
+	LBM lbm(lbm_N, 1u, 1u, 1u, lbm_nu);
+
+	//Mesh* body = read_stl(get_exe_path() + "../stl/Ferrari_SF25.stl");
+	//const float scale = lbm_length / body->get_bounding_box_size().y; // scale parts
+	//body->scale(scale);
+	////const float3 offset = float3(lbm.center().x - body->get_bounding_box_center().x, 1.0f - body->pmin.y + 0.25f, 4.0f);
+	//float ox = lbm.center().x - body->get_bounding_box_center().x;
+	//float oy = 1.0f - body->pmin.y + 120.0f;
+	//float oz = 80.0f;
+	//const float3 offset = float3(ox, oy, oz);
+	//body->translate(offset);
+	//body->set_center(body->get_bounding_box_center()); // set center of meshes to their bounding box center
+	//lbm.voxelize_mesh_on_device(body);
+
+	const float size = 1.6f * (float)lbm_N.x;
+	const float3 center = float3(lbm.center().x, 0.525f * size, 0.116f * size);
+	lbm.voxelize_stl(get_exe_path() + "../stl/Ferrari_SF25.stl", center, size);
+
+	const uint N = lbm.get_N(), Nx = lbm.get_Nx(), Ny = lbm.get_Ny(), Nz = lbm.get_Nz();
+	for (uint n = 0u, x = 0u, y = 0u, z = 0u; n < N; n++, lbm.coordinates(n, x, y, z)) {
+		// ########################################################################### define geometry #############################################################################################
+		if (lbm.flags[n] != TYPE_S) lbm.u.y[n] = lbm_u;
+		if (x == 0u || x == Nx - 1u || y == 0u || y == Ny - 1u || z == Nz - 1u) lbm.flags[n] = TYPE_E;
+		if (z == 0u) lbm.flags[n] = TYPE_S;
+	}	// #########################################################################################################################################################################################
+	lbm.run();
+} /**/
 
 
 /*void main_setup() { // hydraulic jump; required extensions in defines.hpp: FP16S, VOLUME_FORCE, EQUILIBRIUM_BOUNDARIES, SURFACE, INTERACTIVE_GRAPHICS
