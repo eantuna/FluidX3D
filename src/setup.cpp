@@ -292,7 +292,7 @@ void main_setup() { // benchmark; required extensions in defines.hpp: BENCHMARK,
 
 
 
-/*void main_setup() { // delta wing; required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS
+void main_setup() { // delta wing; required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS
 	// ################################################################## define simulation box size, viscosity and volume force ###################################################################
 	const uint L = 128u;
 	const float Re = 100000.0f;
@@ -309,7 +309,20 @@ void main_setup() { // benchmark; required extensions in defines.hpp: BENCHMARK,
 		if(x==0u||x==Nx-1u||y==0u||y==Ny-1u||z==0u||z==Nz-1u) lbm.flags[n] = TYPE_E; // all non periodic
 	}); // ####################################################################### run simulation, export images and data ##########################################################################
 	lbm.graphics.visualization_modes = VIS_FLAG_SURFACE|VIS_Q_CRITERION;
+	const ulong lbm_T = 4000;
+#if defined(GRAPHICS) && !defined(INTERACTIVE_GRAPHICS)
+	while (lbm.get_t() <= lbm_T) { // main simulation loop
+		if (lbm.graphics.next_frame(lbm_T, 10.0f)) {
+			lbm.rho.write_device_to_vtk(); // density
+			lbm.u.write_device_to_vtk(); // velocity
+			lbm.flags.write_device_to_vtk(); // flags
+			lbm.graphics.write_frame(get_exe_path() + "export/a/");
+		}
+		lbm.run(1u, lbm_T);
+	}
+#else // GRAPHICS && !INTERACTIVE_GRAPHICS
 	lbm.run();
+#endif // GRAPHICS && !INTERACTIVE_GRAPHICS
 } /**/
 
 
@@ -999,8 +1012,8 @@ void main_setup() { // benchmark; required extensions in defines.hpp: BENCHMARK,
 #endif // GRAPHICS && !INTERACTIVE_GRAPHICS
 } /**/
 
-void main_setup() { // Ferrari SF25 car; required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, MOVING_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
-	const uint3 lbm_N = resolution(float3(1.0f, 2.0f, 0.5f), 4000u); // input: simulation box aspect ratio and VRAM occupation in MB, output: grid resolution
+/*void main_setup() { // Ferrari SF25 car; required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, MOVING_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
+	const uint3 lbm_N = resolution(float3(1.0f, 2.0f, 0.5f), 5000u); // input: simulation box aspect ratio and VRAM occupation in MB, output: grid resolution
 	const float lbm_u = 0.075f;
 	const float lbm_length = 0.8f * (float)lbm_N.y;
 	const float kmh = 100.0f;
@@ -1012,7 +1025,8 @@ void main_setup() { // Ferrari SF25 car; required extensions in defines.hpp: FP1
 	const float lbm_nu = units.nu(si_nu);
 	LBM lbm(lbm_N, 1u, 1u, 1u, lbm_nu);
 
-	//Mesh* body = read_stl(get_exe_path() + "../stl/Ferrari_SF25.stl");
+	//Mesh* body = read_stl(get_exe_path() + "../stl/Ferrari_SF25_V3.stl");
+	//body->rotate(float3(1, -1, 1));
 	//const float scale = lbm_length / body->get_bounding_box_size().y; // scale parts
 	//body->scale(scale);
 	////const float3 offset = float3(lbm.center().x - body->get_bounding_box_center().x, 1.0f - body->pmin.y + 0.25f, 4.0f);
@@ -1025,8 +1039,9 @@ void main_setup() { // Ferrari SF25 car; required extensions in defines.hpp: FP1
 	//lbm.voxelize_mesh_on_device(body);
 
 	const float size = 1.6f * (float)lbm_N.x;
-	const float3 center = float3(lbm.center().x, 0.525f * size, 0.116f * size);
-	lbm.voxelize_stl(get_exe_path() + "../stl/Ferrari_SF25.stl", center, size);
+	const float3 center = float3(lbm.center().x, 0.525f * size, 0.105f * size);
+	const float3x3 rotation = float3x3(1, -1, 1);
+	lbm.voxelize_stl(get_exe_path() + "../stl/Ferrari_SF25_V3.stl", center, rotation, size);
 
 	const uint N = lbm.get_N(), Nx = lbm.get_Nx(), Ny = lbm.get_Ny(), Nz = lbm.get_Nz();
 	for (uint n = 0u, x = 0u, y = 0u, z = 0u; n < N; n++, lbm.coordinates(n, x, y, z)) {
@@ -1035,7 +1050,24 @@ void main_setup() { // Ferrari SF25 car; required extensions in defines.hpp: FP1
 		if (x == 0u || x == Nx - 1u || y == 0u || y == Ny - 1u || z == Nz - 1u) lbm.flags[n] = TYPE_E;
 		if (z == 0u) lbm.flags[n] = TYPE_S;
 	}	// #########################################################################################################################################################################################
+	
+	const float si_T = 1;
+	const ulong lbm_T = units.t(si_T);
+	lbm.graphics.visualization_modes = VIS_FLAG_SURFACE | VIS_Q_CRITERION;
+#if defined(GRAPHICS) && !defined(INTERACTIVE_GRAPHICS)
+	while (lbm.get_t() <= lbm_T) { // main simulation loop
+		if (lbm.graphics.next_frame(lbm_T, 10.0f)) {
+			lbm.rho.write_device_to_vtk(); // density
+			lbm.u.write_device_to_vtk(); // velocity
+			lbm.flags.write_device_to_vtk(); // flags
+			lbm.graphics.write_frame(get_exe_path() + "export/a/");
+		}
+		lbm.run(1u, lbm_T);
+	}
+#else // GRAPHICS && !INTERACTIVE_GRAPHICS
 	lbm.run();
+#endif // GRAPHICS && !INTERACTIVE_GRAPHICS
+
 } /**/
 
 
