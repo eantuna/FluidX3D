@@ -54,6 +54,8 @@ ffmpeg -i FluidX3D_X_Wing_15100MB_NU7E4_WA.mp4 -r 30 FluidX3D_X_Wing_15100MB_NU7
  ffmpeg -framerate 60 -pattern_type glob -i "export/*/image-*.png" -c:v libx264 -pix_fmt yuv420p -b:v 24M "video.mp4"
  ffmpeg -framerate 60 -pattern_type glob -i "export/image-*.png" -c:v libx264 -pix_fmt yuv420p -b:v 24M FluidX3D_EDF.mp4
  ffmpeg -framerate 60 -pattern_type glob -i "export/image-*.png" -c:v libx264 -preset slow -crf 18 -pix_fmt yuv420p -vf "scale=1920:1080:flags=lanczos" FluidX3D_EDF.mp4
+ ffmpeg -framerate 60 -pattern_type glob -i "export/a/image-*.png" -c:v libx264 -preset slow -crf 18 -pix_fmt yuv420p -vf "scale=1920:1080:flags=lanczos" FluidX3D_DeltaWing.mp4
+ ffmpeg -framerate 60 -pattern_type glob -i "export/a/image-*.png" -c:v libx264 -preset slow -crf 18 -pix_fmt yuv420p -vf "scale=1920:1080:flags=lanczos" FluidX3D_F25.mp4
 
 
 # Build OSX

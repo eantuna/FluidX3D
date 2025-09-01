@@ -292,7 +292,7 @@ void main_setup() { // benchmark; required extensions in defines.hpp: BENCHMARK,
 
 
 
-void main_setup() { // delta wing; required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS
+/*void main_setup() { // delta wing; required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS
 	// ################################################################## define simulation box size, viscosity and volume force ###################################################################
 	const uint L = 128u;
 	const float Re = 100000.0f;
@@ -1012,7 +1012,7 @@ void main_setup() { // delta wing; required extensions in defines.hpp: FP16S, EQ
 #endif // GRAPHICS && !INTERACTIVE_GRAPHICS
 } /**/
 
-/*void main_setup() { // Ferrari SF25 car; required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, MOVING_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
+void main_setup() { // Ferrari SF25 car; required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, MOVING_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
 	const uint3 lbm_N = resolution(float3(1.0f, 2.0f, 0.5f), 5000u); // input: simulation box aspect ratio and VRAM occupation in MB, output: grid resolution
 	const float lbm_u = 0.075f;
 	const float lbm_length = 0.8f * (float)lbm_N.y;
