@@ -1012,7 +1012,7 @@ void main_setup() { // benchmark; required extensions in defines.hpp: BENCHMARK,
 #endif // GRAPHICS && !INTERACTIVE_GRAPHICS
 } /**/
 
-void main_setup() { // Ferrari SF25 car; required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, MOVING_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
+/*void main_setup() { // Ferrari SF25 car; required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, MOVING_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
 	const uint3 lbm_N = resolution(float3(1.0f, 2.0f, 0.5f), 5000u); // input: simulation box aspect ratio and VRAM occupation in MB, output: grid resolution
 	const float lbm_u = 0.075f;
 	const float lbm_length = 0.8f * (float)lbm_N.y;
@@ -1053,6 +1053,53 @@ void main_setup() { // Ferrari SF25 car; required extensions in defines.hpp: FP1
 	
 	const float si_T = 1;
 	const ulong lbm_T = units.t(si_T);
+	lbm.graphics.visualization_modes = VIS_FLAG_SURFACE | VIS_Q_CRITERION;
+#if defined(GRAPHICS) && !defined(INTERACTIVE_GRAPHICS)
+	while (lbm.get_t() <= lbm_T) { // main simulation loop
+		if (lbm.graphics.next_frame(lbm_T, 10.0f)) {
+			lbm.rho.write_device_to_vtk(); // density
+			lbm.u.write_device_to_vtk(); // velocity
+			lbm.flags.write_device_to_vtk(); // flags
+			lbm.graphics.write_frame(get_exe_path() + "export/a/");
+		}
+		lbm.run(1u, lbm_T);
+	}
+#else // GRAPHICS && !INTERACTIVE_GRAPHICS
+	lbm.run();
+#endif // GRAPHICS && !INTERACTIVE_GRAPHICS
+
+} /**/
+
+
+void main_setup() { // AI (Direct3D) generated F1 vehicle; required extensions in defines.hpp: FP16S, EQUILIBRIUM_BOUNDARIES, MOVING_BOUNDARIES, SUBGRID, INTERACTIVE_GRAPHICS or GRAPHICS
+	const uint3 lbm_N = resolution(float3(1.0f, 2.0f, 0.5f), 5500u); // input: simulation box aspect ratio and VRAM occupation in MB, output: grid resolution
+	const float lbm_u = 0.075f;
+	const float lbm_length = 0.8f * (float)lbm_N.y;
+	const float kmh = 100.0f;
+	const float si_u = kmh / 3.6f;
+	const float si_length = 5.5f, si_width = 2.0f;
+	const float si_nu = 1.48E-5f;
+	const float si_rho = 1.225f;
+	units.set_m_kg_s(lbm_length, lbm_u, 1.0f, si_length, si_u, si_rho);
+	const float lbm_nu = units.nu(si_nu);
+	LBM lbm(lbm_N, 1u, 1u, 1u, lbm_nu);
+
+	const float size = 1.55f * (float)lbm_N.x;
+	const float3 center = float3(lbm.center().x, 0.585f * size, 0.124f * size);
+	const float3x3 rotation = float3x3(1, 1, 1);
+	lbm.voxelize_stl(get_exe_path() + "../stl/AI-Direct3D-F1.stl", center, rotation, size);
+
+	const uint N = lbm.get_N(), Nx = lbm.get_Nx(), Ny = lbm.get_Ny(), Nz = lbm.get_Nz();
+	for (uint n = 0u, x = 0u, y = 0u, z = 0u; n < N; n++, lbm.coordinates(n, x, y, z)) {
+		// ########################################################################### define geometry #############################################################################################
+		if (lbm.flags[n] != TYPE_S) lbm.u.y[n] = lbm_u;
+		if (x == 0u || x == Nx - 1u || y == 0u || y == Ny - 1u || z == Nz - 1u) lbm.flags[n] = TYPE_E;
+		if (z == 0u) lbm.flags[n] = TYPE_S;
+	}	// #########################################################################################################################################################################################
+
+	const float si_T = 1;
+	const ulong lbm_T = units.t(si_T);
+	print_info("LBM T=" + to_string(lbm_T));
 	lbm.graphics.visualization_modes = VIS_FLAG_SURFACE | VIS_Q_CRITERION;
 #if defined(GRAPHICS) && !defined(INTERACTIVE_GRAPHICS)
 	while (lbm.get_t() <= lbm_T) { // main simulation loop
